@@ -9,10 +9,9 @@ import org.testng.annotations.Test;
 import pojo.CategoryPojo;
 
 public class CategoryEntityTests extends BaseTests {
-    private CategoryDb  db = new CategoryDb();
+    private final CategoryDb  db = new CategoryDb();
     private CategoryApi api;
     private int id = -1;
-    private String rest_route = "/wp/v2/categories";
 
     @BeforeMethod
     public void setup() {

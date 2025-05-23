@@ -6,8 +6,8 @@ import pojo.CategoryPojo;
 import static io.restassured.RestAssured.given;
 
 public class CategoryApi {
-    private RequestSpecification requestSpec;
-    private String rest_route = "/wp/v2/categories";
+    private final RequestSpecification requestSpec;
+    private final String rest_route = "/wp/v2/categories";
 
     public CategoryApi(RequestSpecification spec) {
         requestSpec = spec;

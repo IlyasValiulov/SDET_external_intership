@@ -3,7 +3,6 @@ package database;
 import pojo.CategoryPojo;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +11,7 @@ import java.sql.Statement;
 public class CategoryDb extends JDBC {
     public CategoryPojo getCategoryById(int id) {
         String sql = "SELECT * FROM wp_terms AS t JOIN wp_term_taxonomy AS tt ON t.term_id = tt.term_id WHERE t.term_id = ?;";
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        try (Connection connection = connectionToDatabase();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, id);
@@ -41,7 +40,7 @@ public class CategoryDb extends JDBC {
             return id;
         }
 
-        try (Connection connection  = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = connectionToDatabase()) {
             String name = category.getName();
             String description = category.getDescription();
             String taxonomy = category.getTaxonomy();
@@ -74,7 +73,7 @@ public class CategoryDb extends JDBC {
     }
 
     public void deleteCategoryById(int id) {
-        try (Connection connection  = DriverManager.getConnection(URL, USER, PASSWORD)) {
+        try (Connection connection = connectionToDatabase()) {
             String sql = "DELETE FROM wp_terms WHERE term_id = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, Integer.toString(id));
