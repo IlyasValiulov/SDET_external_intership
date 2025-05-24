@@ -1,16 +1,24 @@
 package Api;
 
+import extension.ProjectProperties;
 import io.restassured.specification.RequestSpecification;
 import pojo.CategoryPojo;
+
+import java.io.IOException;
 
 import static io.restassured.RestAssured.given;
 
 public class CategoryApi {
     private final RequestSpecification requestSpec;
-    private final String rest_route = "/wp/v2/categories";
+    private final String rest_route;
 
     public CategoryApi(RequestSpecification spec) {
         requestSpec = spec;
+        try {
+            rest_route = ProjectProperties.getProperty("category_rest_route");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public CategoryPojo getCategory(int id) {

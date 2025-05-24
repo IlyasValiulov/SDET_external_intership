@@ -1,15 +1,17 @@
 package extension;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class ProjectProperties {
     private static final Properties prop = new Properties();
-    private static final String propertyPath = "src/test/resources/data.properties";
+    private static final String propertyPath = "data.properties";
 
     public static String getProperty(String key) throws IOException {
-        prop.load(new FileInputStream(propertyPath));
+        try (InputStream input = ProjectProperties.class.getClassLoader().getResourceAsStream(propertyPath)) {
+            prop.load(input);
+        }
         return prop.getProperty(key);
     }
 }

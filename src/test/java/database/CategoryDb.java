@@ -34,10 +34,9 @@ public class CategoryDb extends JDBC {
     }
 
     public int createCategory(CategoryPojo category) {
-        int id = -1;
         if (category == null) {
             System.out.println("Category is null");
-            return id;
+            return -1;
         }
 
         try (Connection connection = connectionToDatabase()) {
@@ -51,8 +50,8 @@ public class CategoryDb extends JDBC {
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, slug);
             int results = preparedStatement.executeUpdate();
-
             if (results > 0) {
+                int id = -1;
                 try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         id = generatedKeys.getInt(1);
@@ -65,11 +64,12 @@ public class CategoryDb extends JDBC {
                 preparedStatement.setString(2, taxonomy);
                 preparedStatement.setString(3, description);
                 preparedStatement.executeUpdate();
+                return id;
             }
         } catch (SQLException e) {
             System.out.println("Errow while working with storage");
         }
-        return id;
+        return -1;
     }
 
     public void deleteCategoryById(int id) {

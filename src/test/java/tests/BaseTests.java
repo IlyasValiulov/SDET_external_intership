@@ -11,18 +11,18 @@ import java.io.IOException;
 import static io.restassured.RestAssured.given;
 
 public class BaseTests {
-    private final String BASE_URL = "http://localhost:8000/index.php";
     protected RequestSpecification requestSpec;
 
     @BeforeClass
     public void setRequestSpecification() throws IOException {
+        String base_url = ProjectProperties.getProperty("base_url");
         String username = ProjectProperties.getProperty("username");
         String password = ProjectProperties.getProperty("password");
 
         RestAssured.defaultParser = Parser.JSON;
         requestSpec = given()
                 .contentType(ContentType.JSON)
-                .baseUri(BASE_URL)
+                .baseUri(base_url)
                 .auth().preemptive().basic(username, password);
     }
 }
