@@ -22,7 +22,7 @@ public class BaseTests {
         RestAssured.defaultParser = Parser.JSON;
         requestSpec = given()
                 .contentType(ContentType.JSON)
-                .baseUri("http://localhost:8000/index.php")
+                .baseUri(base_url)
                 .auth().preemptive().basic(username, password);
     }
 }

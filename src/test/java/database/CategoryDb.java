@@ -34,7 +34,7 @@ public class CategoryDb extends JDBC {
         String sql1 = "INSERT INTO wp_terms (name, slug) VALUES (?, ?);";
         String sql2 = "INSERT INTO wp_term_taxonomy (term_id, taxonomy, description) VALUES (?, ?, ?);";
         try (Connection connection = connectionToDatabase(); PreparedStatement preparedStatement = connection.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS); PreparedStatement preparedStatement2 = connection.prepareStatement(sql2)) {
-            int id = -1;
+            int id;
             preparedStatement.setString(1, category.getName());
             preparedStatement.setString(2, category.getSlug());
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
