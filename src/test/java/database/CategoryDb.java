@@ -34,26 +34,22 @@ public class CategoryDb extends JDBC {
         String sql1 = "INSERT INTO wp_terms (name, slug) VALUES (?, ?);";
         String sql2 = "INSERT INTO wp_term_taxonomy (term_id, taxonomy, description) VALUES (?, ?, ?);";
         try (Connection connection = connectionToDatabase(); PreparedStatement preparedStatement = connection.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS); PreparedStatement preparedStatement2 = connection.prepareStatement(sql2)) {
-            String name = category.getName();
-            String description = category.getDescription();
-            String taxonomy = category.getTaxonomy();
-            String slug = category.getSlug();
             int id = -1;
-            preparedStatement.setString(1, name);
-            preparedStatement.setString(2, slug);
-            int results = preparedStatement.executeUpdate();
-            if (results > 0) {
-                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        id = generatedKeys.getInt(1);
-                    }
+            preparedStatement.setString(1, category.getName());
+            preparedStatement.setString(2, category.getSlug());
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    id = generatedKeys.getInt(1);
+                }
+                else {
+                    throw new SQLException("Нет ID.");
                 }
             }
             preparedStatement2.setString(1, Integer.toString(id));
-            preparedStatement2.setString(2, taxonomy);
-            preparedStatement2.setString(3, description);
+            preparedStatement2.setString(2, category.getTaxonomy());
+            preparedStatement2.setString(3, category.getDescription());
             preparedStatement2.executeUpdate();
-                return id;
+            return id;
         } catch (SQLException e) {
             System.out.println("Errow while working with storage");
         }
