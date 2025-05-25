@@ -11,9 +11,7 @@ import java.sql.Statement;
 public class CategoryDb extends JDBC {
     public CategoryPojo getCategoryById(int id) {
         String sql = "SELECT * FROM wp_terms AS t JOIN wp_term_taxonomy AS tt ON t.term_id = tt.term_id WHERE t.term_id = ?;";
-        try (Connection connection = connectionToDatabase();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
+        try (Connection connection = connectionToDatabase(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
 
             try (ResultSet results = preparedStatement.executeQuery()) {
@@ -34,36 +32,33 @@ public class CategoryDb extends JDBC {
     }
 
     public int createCategory(CategoryPojo category) {
-        if (category == null) {
-            System.out.println("Category is null");
-            return -1;
-        }
-
         try (Connection connection = connectionToDatabase()) {
             String name = category.getName();
             String description = category.getDescription();
             String taxonomy = category.getTaxonomy();
             String slug = category.getSlug();
 
+            int id = -1;
             String sql = "INSERT INTO wp_terms (name, slug) VALUES (?, ?);";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, name);
-            preparedStatement.setString(2, slug);
-            int results = preparedStatement.executeUpdate();
-            if (results > 0) {
-                int id = -1;
-                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        id = generatedKeys.getInt(1);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                preparedStatement.setString(1, name);
+                preparedStatement.setString(2, slug);
+                int results = preparedStatement.executeUpdate();
+                if (results > 0) {
+
+                    try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                        if (generatedKeys.next()) {
+                            id = generatedKeys.getInt(1);
+                        }
                     }
                 }
-
-                sql = "INSERT INTO wp_term_taxonomy (term_id, taxonomy, description) VALUES (?, ?, ?);";
-                preparedStatement = connection.prepareStatement(sql);
-                preparedStatement.setString(1, Integer.toString(id));
-                preparedStatement.setString(2, taxonomy);
-                preparedStatement.setString(3, description);
-                preparedStatement.executeUpdate();
+            }
+            sql = "INSERT INTO wp_term_taxonomy (term_id, taxonomy, description) VALUES (?, ?, ?);";
+            try (PreparedStatement preparedStatement2 = connection.prepareStatement(sql)) {
+                preparedStatement2.setString(1, Integer.toString(id));
+                preparedStatement2.setString(2, taxonomy);
+                preparedStatement2.setString(3, description);
+                preparedStatement2.executeUpdate();
                 return id;
             }
         } catch (SQLException e) {
@@ -75,14 +70,15 @@ public class CategoryDb extends JDBC {
     public void deleteCategoryById(int id) {
         try (Connection connection = connectionToDatabase()) {
             String sql = "DELETE FROM wp_terms WHERE term_id = ?;";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, Integer.toString(id));
-            preparedStatement.executeUpdate();
-
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, Integer.toString(id));
+                preparedStatement.executeUpdate();
+            }
             sql = "DELETE FROM wp_term_taxonomy WHERE term_id = ?;";
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, Integer.toString(id));
-            preparedStatement.executeUpdate();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, Integer.toString(id));
+                preparedStatement.executeUpdate();
+            }
         } catch (SQLException e) {
             System.out.println("Errow while working with storage");
         }
