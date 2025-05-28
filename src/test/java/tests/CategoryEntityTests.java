@@ -77,17 +77,18 @@ public class CategoryEntityTests extends BaseTests {
         List<String> meta = new ArrayList<>();
         int id = db.createCategory(new CategoryPojo(0, name, description, taxonomy, slug, count, link, parent, meta));
 
+        CategoryPojo categorydb = db.getCategoryById(id);
         CategoryPojo category = api.getCategory(id);
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(category);
-        softAssert.assertEquals(name, category.getName());
-        softAssert.assertEquals(description, category.getDescription());
-        softAssert.assertEquals(slug, category.getSlug());
-        softAssert.assertEquals(count, category.getCount());
-        softAssert.assertEquals(link, category.getLink());
-        softAssert.assertEquals(parent, category.getParent());
-        softAssert.assertEquals(meta, category.getMeta());
+        softAssert.assertEquals(categorydb.getName(), category.getName());
+        softAssert.assertEquals(categorydb.getDescription(), category.getDescription());
+        softAssert.assertEquals(categorydb.getSlug(), category.getSlug());
+        softAssert.assertEquals(categorydb.getCount(), category.getCount());
+        softAssert.assertEquals(categorydb.getLink(), category.getLink());
+        softAssert.assertEquals(categorydb.getParent(), category.getParent());
+        softAssert.assertEquals(categorydb.getMeta(), category.getMeta());
         softAssert.assertAll();
 
         db.deleteCategoryById(id);

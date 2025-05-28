@@ -76,17 +76,18 @@ public class TagEntityTests extends BaseTests {
         List<String> meta = new ArrayList<>();
         int id = db.createTag(new TagPojo(0, name, description, count, link, slug, taxonomy, meta));
 
+        TagPojo tagdb = db.getTagById(id);
         TagPojo tag = api.getTag(id);
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(tag);
-        softAssert.assertEquals(name, tag.getName());
-        softAssert.assertEquals(description, tag.getDescription());
-        softAssert.assertEquals(count, tag.getCount());
-        softAssert.assertEquals(link, tag.getLink());
-        softAssert.assertEquals(slug, tag.getSlug());
-        softAssert.assertEquals(taxonomy, tag.getTaxonomy());
-        softAssert.assertEquals(meta, tag.getMeta());
+        softAssert.assertEquals(tagdb.getName(), tag.getName());
+        softAssert.assertEquals(tagdb.getDescription(), tag.getDescription());
+        softAssert.assertEquals(tagdb.getCount(), tag.getCount());
+        softAssert.assertEquals(tagdb.getLink(), tag.getLink());
+        softAssert.assertEquals(tagdb.getSlug(), tag.getSlug());
+        softAssert.assertEquals(tagdb.getTaxonomy(), tag.getTaxonomy());
+        softAssert.assertEquals(tagdb.getMeta(), tag.getMeta());
         softAssert.assertAll();
 
         db.deleteTagById(id);

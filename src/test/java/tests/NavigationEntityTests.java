@@ -72,15 +72,16 @@ public class NavigationEntityTests extends BaseTests {
         int id = db.createNavigation(new NavigationPojo(0, new Date().toString(), new Date().toString(), new Date().toString(), new Date().toString(),
                 "", slug, status, "wp_navigation", password, title, content));
 
+        NavigationPojo navigationdb = db.getNavigationById(id);
         NavigationPojo navigation = api.getNavigation(id);
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(navigation);
-        softAssert.assertEquals(slug, navigation.getSlug());
-        softAssert.assertEquals(status, navigation.getStatus());
-        softAssert.assertEquals(password, navigation.getPassword());
-        softAssert.assertEquals(title, navigation.getTitle());
-        softAssert.assertEquals(content, navigation.getContent());
+        softAssert.assertEquals(navigationdb.getSlug(), navigation.getSlug());
+        softAssert.assertEquals(navigationdb.getStatus(), navigation.getStatus());
+        softAssert.assertEquals(navigationdb.getPassword(), navigation.getPassword());
+        softAssert.assertEquals(navigationdb.getTitle(), navigation.getTitle());
+        softAssert.assertEquals(navigationdb.getContent(), navigation.getContent());
         softAssert.assertAll();
 
         db.deleteNavigationById(id);
