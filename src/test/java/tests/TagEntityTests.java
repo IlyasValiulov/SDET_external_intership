@@ -74,7 +74,7 @@ public class TagEntityTests extends BaseTests {
         String slug = "slug";
         String taxonomy = "category";
         List<String> meta = new ArrayList<>();
-        int id = db.createTag(new TagPojo(0, name, description, count, link, slug, taxonomy, meta));
+        int id = db.createTag(TagPojo.builder().id(0).name(name).description(description).count(count).link(link).slug(slug).taxonomy(taxonomy).meta(meta).build());
 
         TagPojo tagdb = db.getTagById(id);
         TagPojo tag = api.getTag(id);

@@ -69,8 +69,8 @@ public class NavigationEntityTests extends BaseTests {
         String title = "title";
         String content = "content";
 
-        int id = db.createNavigation(new NavigationPojo(0, new Date().toString(), new Date().toString(), new Date().toString(), new Date().toString(),
-                "", slug, status, "wp_navigation", password, title, content));
+        int id = db.createNavigation(NavigationPojo.builder().id(0).date(new Date().toString()).date_gmt(new Date().toString()).modified(new Date().toString())
+                .modified_gmt(new Date().toString()).guid("").slug(slug).status(status).type("wp_navigation").password(password).title(title).content(content).build());
 
         NavigationPojo navigationdb = db.getNavigationById(id);
         NavigationPojo navigation = api.getNavigation(id);

@@ -75,7 +75,7 @@ public class CategoryEntityTests extends BaseTests {
         String link = "";
         int parent = 0;
         List<String> meta = new ArrayList<>();
-        int id = db.createCategory(new CategoryPojo(0, name, description, taxonomy, slug, count, link, parent, meta));
+        int id = db.createCategory(CategoryPojo.builder().id(0).name(name).description(description).taxonomy(taxonomy).slug(slug).count(count).link(link).parent(parent).meta(meta).build());
 
         CategoryPojo categorydb = db.getCategoryById(id);
         CategoryPojo category = api.getCategory(id);
