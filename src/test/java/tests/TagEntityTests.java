@@ -66,6 +66,33 @@ public class TagEntityTests extends BaseTests {
     }
 
     @Test
+    public void createTagDbTest() {
+        String name = "name";
+        String description = "desc";
+        int count = 0;
+        String link = "";
+        String slug = "slug";
+        String taxonomy = "category";
+        List<String> meta = new ArrayList<>();
+        int id = db.createTag(new TagPojo(0, name, description, count, link, slug, taxonomy, meta));
+
+        TagPojo tag = api.getTag(id);
+
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertNotNull(tag);
+        softAssert.assertEquals(name, tag.getName());
+        softAssert.assertEquals(description, tag.getDescription());
+        softAssert.assertEquals(count, tag.getCount());
+        softAssert.assertEquals(link, tag.getLink());
+        softAssert.assertEquals(slug, tag.getSlug());
+        softAssert.assertEquals(taxonomy, tag.getTaxonomy());
+        softAssert.assertEquals(meta, tag.getMeta());
+        softAssert.assertAll();
+
+        db.deleteTagById(id);
+    }
+
+    @Test
     public void updateTagTest() {
         String name = "nameupd";
         String description = "descupd";
