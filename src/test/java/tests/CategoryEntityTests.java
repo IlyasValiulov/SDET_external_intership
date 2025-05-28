@@ -66,6 +66,35 @@ public class CategoryEntityTests extends BaseTests {
     }
 
     @Test
+    public void creatCategoryDbTest() {
+        String name = "name";
+        String description = "desc";
+        String taxonomy = "category";
+        String slug = "slug";
+        int count = 0;
+        String link = "";
+        int parent = 0;
+        List<String> meta = new ArrayList<>();
+        int id = db.createCategory(CategoryPojo.builder().id(0).name(name).description(description).taxonomy(taxonomy).slug(slug).count(count).link(link).parent(parent).meta(meta).build());
+
+        CategoryPojo categorydb = db.getCategoryById(id);
+        CategoryPojo category = api.getCategory(id);
+
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertNotNull(category);
+        softAssert.assertEquals(categorydb.getName(), category.getName());
+        softAssert.assertEquals(categorydb.getDescription(), category.getDescription());
+        softAssert.assertEquals(categorydb.getSlug(), category.getSlug());
+        softAssert.assertEquals(categorydb.getCount(), category.getCount());
+        softAssert.assertEquals(categorydb.getLink(), category.getLink());
+        softAssert.assertEquals(categorydb.getParent(), category.getParent());
+        softAssert.assertEquals(categorydb.getMeta(), category.getMeta());
+        softAssert.assertAll();
+
+        db.deleteCategoryById(id);
+    }
+
+    @Test
     public void updateCatergoryTest() {
         String name = "nameupdate";
         String description = "descupdate";
