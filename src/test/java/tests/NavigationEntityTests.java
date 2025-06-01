@@ -62,6 +62,32 @@ public class NavigationEntityTests extends BaseTests {
     }
 
     @Test
+    public void createNavigationDbTest() {
+        String slug = "slug";
+        String status = "publish";
+        String password = "";
+        String title = "title";
+        String content = "content";
+
+        int id = db.createNavigation(NavigationPojo.builder().id(0).date(new Date().toString()).date_gmt(new Date().toString()).modified(new Date().toString())
+                .modified_gmt(new Date().toString()).guid("").slug(slug).status(status).type("wp_navigation").password(password).title(title).content(content).build());
+
+        NavigationPojo navigationdb = db.getNavigationById(id);
+        NavigationPojo navigation = api.getNavigation(id);
+
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertNotNull(navigation);
+        softAssert.assertEquals(navigationdb.getSlug(), navigation.getSlug());
+        softAssert.assertEquals(navigationdb.getStatus(), navigation.getStatus());
+        softAssert.assertEquals(navigationdb.getPassword(), navigation.getPassword());
+        softAssert.assertEquals(navigationdb.getTitle(), navigation.getTitle());
+        softAssert.assertEquals(navigationdb.getContent(), navigation.getContent());
+        softAssert.assertAll();
+
+        db.deleteNavigationById(id);
+    }
+
+    @Test
     public void updateNavigationTest() {
         String slug = "slug";
         String status = "publish";
